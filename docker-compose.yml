@@ -1,0 +1,43 @@
+version: '3.4'
+services:
+
+  # https://www.docker.elastic.co/
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - $PWD/data/elasticsearch:/usr/share/elasticsearch/data
+      - $PWD/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    # ports:
+    #    - 9200:9200
+    #    - 9300:9300
+  
+  logstash:
+    build: logstash
+    ports:
+      - 5044:5044
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.4.2
+    #ports:
+    #  - 5601:5601
+
+  nginx:
+    image: nginx:1.15-alpine
+    ports:
+      - 8006:80
+    volumes:
+      - $PWD/kibana.passwd:/work/kibana.passwd
+      - $PWD/nginx.conf:/etc/nginx/conf.d/default.conf
+
+  # head:
+  #   image: mobz/elasticsearch-head:5-alpine
+  #   ports:
+  #     - 9100:9100

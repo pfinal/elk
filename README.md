@@ -1,10 +1,13 @@
+docker elk
+
+```
 chmod -R 777 elasticsearch data logstash
 apt install -y apache2-utils
 htpasswd -c -b kibana.passwd admin a123456
 docker-compose build
 docker-compose up
 docker-compose up -d
-
+```
 
 类似这样的报错：
 max virtual memory areas vm.max_map_count [65530] is too low
